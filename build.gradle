@@ -1,0 +1,60 @@
+buildscript {
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2")
+        classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.21.0")
+    }
+}
+
+plugins {
+    id "idea"
+    id 'java'
+}
+
+group 'com.lucidworks.cloud'
+version '1.0-SNAPSHOT'
+
+repositories {
+    maven {
+        credentials {
+            username = "${lucidArtifactoryUsername}"
+            password = "${lucidArtifactoryPassword}"
+        }
+        authentication {
+            basic(BasicAuthentication)
+        }
+        url "https://artifactory.lucidworks.com/artifactory/fusion-dev/"
+    }
+    maven { url 'https://repo.spring.io/milestone' }
+    maven {
+        url "https://oss.sonatype.org/content/groups/public"
+    }
+    maven {
+        url "https://maven.restlet.com"
+    }
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+}
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+    compile.exclude group: "org.slf4j", module: "slf4j-log4j12"
+    compile.exclude group: "log4j", module: "log4j"
+    compile.exclude group: "org.apache.logging.log4j", module: "log4j-slf4j-impl"
+}
+
+dependencies {
+    implementation platform("com.lucidworks.cloud:fusion-platform-deps:${fusionPlatformDepsVersion}")
+    implementation platform("com.lucidworks.cloud:fusion-shared-deps:${fusionSharedDepsVersion}")
+
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.cloud:spring-cloud-gcp-starter-pubsub:${springPubsubVersion}"
+    implementation "org.springframework.cloud:spring-cloud-gcp-starter-data-firestore:${springFirestoreVersion}"
+    implementation "org.springframework.cloud:spring-cloud-gcp-starter-storage:${springCloudStorageVersion}"
+    implementation "org.springframework.integration:spring-integration-core:${springIntegrationVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
