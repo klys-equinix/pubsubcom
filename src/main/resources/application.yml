@@ -3,8 +3,11 @@ spring:
     gcp:
       project-id: test
       firestore:
-        host-port: localhost:8081
+        host-port: localhost:8080
         emulator:
           enabled: true
       pubsub:
         emulator-host: localhost:8085
+
+server:
+  port: 8081
