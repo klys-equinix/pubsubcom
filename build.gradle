@@ -38,21 +38,19 @@ repositories {
 }
 
 configurations {
-    compile.exclude module: "spring-boot-starter-tomcat"
-    compile.exclude group: "org.slf4j", module: "slf4j-log4j12"
-    compile.exclude group: "log4j", module: "log4j"
-    compile.exclude group: "org.apache.logging.log4j", module: "log4j-slf4j-impl"
 }
 
 dependencies {
     implementation platform("com.lucidworks.cloud:fusion-platform-deps:${fusionPlatformDepsVersion}")
     implementation platform("com.lucidworks.cloud:fusion-shared-deps:${fusionSharedDepsVersion}")
 
-    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.cloud:spring-cloud-gcp-starter-pubsub:${springPubsubVersion}"
     implementation "org.springframework.cloud:spring-cloud-gcp-starter-data-firestore:${springFirestoreVersion}"
-    implementation "org.springframework.cloud:spring-cloud-gcp-starter-storage:${springCloudStorageVersion}"
+//    implementation "org.springframework.cloud:spring-cloud-gcp-starter-storage:${springCloudStorageVersion}"
     implementation "org.springframework.integration:spring-integration-core:${springIntegrationVersion}"
+//    implementation 'com.google.cloud:google-cloud-nio:0.122.13'
+
 }
 
 test {
