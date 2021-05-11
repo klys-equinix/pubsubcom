@@ -15,23 +15,6 @@ group 'com.lucidworks.cloud'
 version '1.0-SNAPSHOT'
 
 repositories {
-    maven {
-        credentials {
-            username = "${lucidArtifactoryUsername}"
-            password = "${lucidArtifactoryPassword}"
-        }
-        authentication {
-            basic(BasicAuthentication)
-        }
-        url "https://artifactory.lucidworks.com/artifactory/fusion-dev/"
-    }
-    maven { url 'https://repo.spring.io/milestone' }
-    maven {
-        url "https://oss.sonatype.org/content/groups/public"
-    }
-    maven {
-        url "https://maven.restlet.com"
-    }
     jcenter()
     mavenCentral()
     mavenLocal()
@@ -41,10 +24,8 @@ configurations {
 }
 
 dependencies {
-    implementation platform("com.lucidworks.cloud:fusion-platform-deps:${fusionPlatformDepsVersion}")
-    implementation platform("com.lucidworks.cloud:fusion-shared-deps:${fusionSharedDepsVersion}")
 
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     implementation "org.springframework.cloud:spring-cloud-gcp-starter-pubsub:${springPubsubVersion}"
     implementation "org.springframework.cloud:spring-cloud-gcp-starter-data-firestore:${springFirestoreVersion}"
 //    implementation "org.springframework.cloud:spring-cloud-gcp-starter-storage:${springCloudStorageVersion}"
