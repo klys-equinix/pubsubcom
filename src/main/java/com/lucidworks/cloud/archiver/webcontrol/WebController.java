@@ -2,6 +2,7 @@ package com.lucidworks.cloud.archiver.webcontrol;
 
 import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.pubsub.v1.PubsubMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gcp.pubsub.PubSubAdmin;
 import org.springframework.cloud.gcp.pubsub.core.PubSubTemplate;
 import org.springframework.cloud.gcp.pubsub.support.AcknowledgeablePubsubMessage;
@@ -33,6 +34,7 @@ public class WebController {
 
     private final ArrayList<Subscriber> allSubscribers;
 
+    @Autowired
     public WebController(PubSubTemplate pubSubTemplate, PubSubAdmin pubSubAdmin) {
         this.pubSubTemplate = pubSubTemplate;
         this.pubSubAdmin = pubSubAdmin;
@@ -58,12 +60,9 @@ public class WebController {
     public ResponseEntity publish(
             @RequestParam("topicName") String topicName,
             @RequestParam("message") String message,
-            @RequestParam("count") int messageCount,
             @RequestBody Map<String, String> headers
     ) {
-        for (int i = 0; i < messageCount; i++) {
-            this.pubSubTemplate.publish(topicName, message, headers);
-        }
+        this.pubSubTemplate.publish(topicName, message, headers);
 
         return ResponseEntity.ok("Messages published asynchronously; status unknown.");
     }
@@ -82,7 +81,7 @@ public class WebController {
         }
 
         return messages.stream().map(pm ->
-                Map.of("id", pm.getPubsubMessage().getAttributesMap().get("id"), "body", pm.getPubsubMessage().getData().toStringUtf8())).collect(Collectors.toList());
+                Map.of("documentId", pm.getPubsubMessage().getAttributesMap().get("documentId"), "body", pm.getPubsubMessage().getData().toStringUtf8())).collect(Collectors.toList());
     }
 
     @GetMapping("/multipull")
