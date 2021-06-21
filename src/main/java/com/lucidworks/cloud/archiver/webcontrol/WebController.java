@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @RestController
@@ -59,11 +60,11 @@ public class WebController {
     @PostMapping("/postMessage")
     public ResponseEntity publish(
             @RequestParam("topicName") String topicName,
-            @RequestParam("message") String message,
             @RequestBody Map<String, String> headers
     ) {
+        var message = headers.get("message");
+        headers.remove("message");
         this.pubSubTemplate.publish(topicName, message, headers);
-
         return ResponseEntity.ok("Messages published asynchronously; status unknown.");
     }
 
@@ -71,7 +72,6 @@ public class WebController {
     public List<Object> pull(@RequestParam("subscription") String subscriptionName) {
 
         Collection<AcknowledgeablePubsubMessage> messages = this.pubSubTemplate.pull(subscriptionName, 10, true);
-
         RedirectView returnView;
         try {
             ListenableFuture<Void> ackFuture = this.pubSubTemplate.ack(messages);

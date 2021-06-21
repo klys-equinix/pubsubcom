@@ -1,13 +1,13 @@
-spring:
-  cloud:
-    gcp:
-      project-id: test
-      firestore:
-        host-port: localhost:8080
-        emulator:
-          enabled: true
-      pubsub:
-        emulator-host: localhost:8085
+#spring:
+#  cloud:
+#    gcp:
+#      project-id: test
+#      firestore:
+#        host-port: localhost:8080
+#        emulator:
+#          enabled: true
+#      pubsub:
+#        emulator-host: localhost:8085
 
 server:
   port: 8081

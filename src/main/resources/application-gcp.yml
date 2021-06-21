@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    gcp:
+      project-id: lucidworks-dev
+      credentials:
+        encoded-key: ${GC_CREDS}
+
+server:
+  port: 8081
