@@ -1,7 +1,7 @@
 spring:
   cloud:
     gcp:
-      project-id: lucidworks-dev
+      project-id: springboard-dev-316314
       credentials:
         encoded-key: ${GC_CREDS}
 

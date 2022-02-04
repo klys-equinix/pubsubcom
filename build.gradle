@@ -6,6 +6,7 @@ buildscript {
     }
 }
 
+
 plugins {
     id "idea"
     id 'java'
@@ -14,7 +15,35 @@ plugins {
 group 'com.lucidworks.cloud'
 version '1.0-SNAPSHOT'
 
+
 repositories {
+    maven {
+        credentials {
+            username = "${lucidArtifactoryUsername}"
+            password = "${lucidArtifactoryPassword}"
+        }
+        authentication {
+            basic(BasicAuthentication)
+        }
+        url "https://artifactory.lucidworks.com/artifactory/fusion-dev/"
+    }
+    maven {
+        credentials {
+            username = "${lucidArtifactoryUsername}"
+            password = "${lucidArtifactoryPassword}"
+        }
+        authentication {
+            basic(BasicAuthentication)
+        }
+        url "https://ci-artifactory.lucidworks.com/artifactory/one-platform-libs/"
+    }
+    maven { url 'https://repo.spring.io/milestone' }
+    maven {
+        url "https://oss.sonatype.org/content/groups/public"
+    }
+    maven {
+        url "https://maven.restlet.com"
+    }
     jcenter()
     mavenCentral()
     mavenLocal()
@@ -31,6 +60,8 @@ dependencies {
 //    implementation "org.springframework.cloud:spring-cloud-gcp-starter-storage:${springCloudStorageVersion}"
     implementation "org.springframework.integration:spring-integration-core:${springIntegrationVersion}"
 //    implementation 'com.google.cloud:google-cloud-nio:0.122.13'
+    implementation "com.lucidworks.data-models:content-schemas:3.0.0"
+    implementation (group: 'cloud.lucidworks.one.platform', name: 'one-platform-messaging', version: '0.0.40')
 
 }
 

@@ -1,5 +1,7 @@
 package com.lucidworks.cloud.archiver.webcontrol;
 
+import cloud.lucidworks.one.platform.messaging.applicationevents.DatasourceEvent;
+import cloud.lucidworks.one.platform.messaging.applicationevents.DatasourceLinkEvent;
 import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.pubsub.v1.PubsubMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -65,6 +68,36 @@ public class WebController {
         var message = headers.get("message");
         headers.remove("message");
         this.pubSubTemplate.publish(topicName, message, headers);
+        return ResponseEntity.ok("Messages published asynchronously; status unknown.");
+    }
+
+    @PostMapping("/dLink")
+    public ResponseEntity dLink(
+            @RequestParam("topicName") String topicName,
+            @RequestBody Map<String, String> dLink
+    ) {
+        var eType = dLink.get("event_type");
+        dLink.remove("event_type");
+        DatasourceLinkEvent.CellConfig cellConfig = DatasourceLinkEvent.CellConfig.newBuilder()
+                .setName(dLink.get("cellName"))
+                .build();
+        DatasourceLinkEvent dEvent = DatasourceLinkEvent.newBuilder()
+                .setApp(
+                        DatasourceLinkEvent.AppConfig.newBuilder()
+                                .setCell(
+                                        cellConfig
+                                )
+                                .setId(dLink.get("appId"))
+                                .build()
+                ).setDatasource(
+                        DatasourceLinkEvent.DatasourceConfig.newBuilder()
+                                .setCell(
+                                        cellConfig
+                                )
+                                .setId(dLink.get("datasourceId"))
+                                .build()
+                ).build();
+        this.pubSubTemplate.publish(topicName, dEvent.toByteString(), Map.of("event_type", eType, "format", "PROTO", "customer_id", UUID.randomUUID().toString()));
         return ResponseEntity.ok("Messages published asynchronously; status unknown.");
     }
 
